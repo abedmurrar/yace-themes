@@ -32,15 +32,21 @@ only: it contains no code, so nothing runs when you install it.
 
 ## Install
 
-Needs YACE 0.11 or later.
+In YACE 0.12 or later: **Extensions: Browse Plugins…** and pick YACE
+Themes, or from a shell:
+
+```sh
+yace --install-plugin io.github.abedmurrar.yace-themes
+```
+
+In YACE 0.11, download the package and install it:
 
 ```sh
 curl -fsSLO https://github.com/abedmurrar/yace-themes/releases/latest/download/yace-themes.tar.gz
 yace --install-plugin yace-themes.tar.gz
 ```
 
-Or in YACE: **Extensions: Install from Package…** and choose the
-downloaded file. Then pick a theme with `Ctrl+K Ctrl+T` (Preferences:
+Then pick a theme with `Ctrl+K Ctrl+T` (Preferences:
 Color Theme), or set it in `~/.config/yace/config.toml`:
 
 ```toml
@@ -80,7 +86,12 @@ it again every time you save.
 
 To release: bump `version` in `yace-plugin.toml`, commit, and push a tag
 `vX.Y.Z`. The release workflow checks the themes, packages them and
-publishes the package with its SHA-256.
+publishes the package with its SHA-256. Then list the new version in the
+YACE plugin index, from a YACE checkout:
+
+```sh
+scripts/plugin_index.py add https://github.com/abedmurrar/yace-themes/releases/download/vX.Y.Z/yace-themes-X.Y.Z.tar.gz
+```
 
 ## Licence
 

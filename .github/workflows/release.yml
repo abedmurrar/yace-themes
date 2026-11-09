@@ -30,4 +30,4 @@ jobs:
           sha256sum yace-themes-*.tar.gz > SHA256SUMS
           cp yace-themes-*.tar.gz yace-themes.tar.gz
           gh release create "$GITHUB_REF_NAME" yace-themes-*.tar.gz yace-themes.tar.gz SHA256SUMS \
-            --title "YACE Themes $GITHUB_REF_NAME" --notes "Install: download yace-themes.tar.gz, then run \`yace --install-plugin yace-themes.tar.gz\`, or use Extensions: Install from Package… in YACE. Then pick a theme with Ctrl+K Ctrl+T."
+            --title "YACE Themes $GITHUB_REF_NAME" --notes "Install (YACE 0.12+): \`yace --install-plugin io.github.abedmurrar.yace-themes\`, or Extensions: Browse Plugins… in YACE. On YACE 0.11: download yace-themes.tar.gz and run \`yace --install-plugin yace-themes.tar.gz\`. Then pick a theme with Ctrl+K Ctrl+T."
