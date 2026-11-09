@@ -1,0 +1,33 @@
+name: Release
+
+# Push a tag vX.Y.Z (matching `version` in yace-plugin.toml) to publish
+# dist/yace-themes-X.Y.Z.tar.gz and its SHA-256 as a GitHub Release.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag matches the manifest
+        run: |
+          v="$(sed -n 's/^version = "\(.*\)"/\1/p' yace-plugin.toml)"
+          [[ "v$v" == "$GITHUB_REF_NAME" ]] || { echo "tag $GITHUB_REF_NAME, manifest $v"; exit 1; }
+      - run: python3 scripts/check_themes.py
+      - run: curl -fsSL https://abedmurrar.github.io/yace/install.sh | sudo sh
+      - run: scripts/package.sh
+      - run: yace --install-plugin dist/yace-themes-*.tar.gz --yes
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd dist
+          sha256sum yace-themes-*.tar.gz > SHA256SUMS
+          cp yace-themes-*.tar.gz yace-themes.tar.gz
+          gh release create "$GITHUB_REF_NAME" yace-themes-*.tar.gz yace-themes.tar.gz SHA256SUMS \
+            --title "YACE Themes $GITHUB_REF_NAME" --notes "Install: download yace-themes.tar.gz, then run \`yace --install-plugin yace-themes.tar.gz\`, or use Extensions: Install from Package… in YACE. Then pick a theme with Ctrl+K Ctrl+T."
